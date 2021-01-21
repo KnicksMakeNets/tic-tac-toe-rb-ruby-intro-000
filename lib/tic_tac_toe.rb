@@ -25,3 +25,17 @@ end
 def input_to_index(input)
   index = input.to_i - 1
 end
+
+#move allows "X" player in the bottom right and "O" in the top left
+def move(board, position, player)
+  board[position] = "#{player}"
+end
+
+#valid_move? returns true/false based on index
+def valid_move?(board, index)
+  if index.between?(0,8) && !position_taken?(board,index)
+    true
+  else
+    false
+  end
+end
