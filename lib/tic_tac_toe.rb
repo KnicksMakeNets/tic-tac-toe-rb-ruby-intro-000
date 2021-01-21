@@ -39,3 +39,91 @@ def valid_move?(board, index)
     false
   end
 end
+
+def position_taken?(board, index)
+  if board[index] == "X" || board[index] == "O"
+    true
+  else
+    false
+  end
+end
+
+#turn puts everything all together
+def turn(board)
+  puts "Please enter 1-9:"
+  input = gets.strip
+  index = input_to_index(input)
+  player = current_player(board)
+  if valid_move?(board,index)
+    move(board, index, player)
+    display_board(board)
+    return board
+  else
+    turn(board)
+  end
+end
+
+def turn_count(board)
+  count = 0
+  board.each do |space|
+    if space == "X" || space == "O"
+      count += 1
+    end
+  end
+  return count
+end
+
+def current_player(board)
+  count = turn_count(board)
+  if count % 2 == 0
+    return "X"
+  else
+    return "O"
+  end
+end
+
+def won?(board)
+  positions = []
+  winner = []
+  WIN_COMBINATIONS.each do |winCombo| #iterate over each winning combination of the entire winning combinations array
+    counter = 0
+    winCombo.each do |index| #iterate over each element of each winning combo
+      positions[counter] = board[index] #pushes the element of the current board at the index based off the winning combination element
+      counter += 1
+    end
+    if positions.all? {|position| position == "X"} #if all the board elements in the winning combo indexes are X, it's a win!
+      return winCombo
+    elsif positions.all? {|position| position == "O"} #same above but for O
+      return winCombo
+    end
+  end
+  return false #returns false after the function iterates through each winning combination
+end
+
+def full?(board)
+  board.none?{|space| space == " "}
+end
+
+def draw?(board)
+  if full?(board) && !won?(board)
+    return true
+else
+    return false
+  end
+end
+
+def over?(board)
+  if  won?(board) || draw?(board)
+    return true
+  else
+    return false
+  end
+end
+
+def winner(board)
+  if won?(board)
+    winCombo = won?(board)
+    index = winCombo[0]
+    return board[index]
+  end
+end
